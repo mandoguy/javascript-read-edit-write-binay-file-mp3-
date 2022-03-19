@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+
+<!--
+****************************************************************************
+                     Reads and writes a local binary file
+****************************************************************************
+-->
+<P>
+<center>
+<div id=browse1div style="border:1px black solid; padding:10px 30px 10px 30px; display:inline-block; width:auto;">
+   Loads a LOCAL binary file
+   <input id="filelist1" style="font-size:50px;background-color:#bbbbff;" type=file onchange='ReadFileData();' >
+</div>
+
+<P>
+<div id=browse1div 
+  style="border:1px black solid; padding:10px 30px 10px 30px; display:inline-block; width:auto;">
+   <button onclick="SaveToFile();"> Save Data to Binary File </button><P>
+
+   <a download="jfbfile1.bin" id="downloadlink" style="display:none;"> </a>
+   File name <input type=text size=40 id=fname value="outfile.bin">
+</div>
+</center>
+
+
+
+<SCRIPT language=javascript type=text/javascript>
+
+   var rawdata = new Array();
+
+
+
+function ReadFileData() {
+//*********************************************************************
+//    Called when Browse file is activated.  It reads the input file.
+//*********************************************************************
+
+   var e2 = document.getElementById("filelist1");
+   var files = e2.files;
+
+   function readAllSongsFile() {
+       var reader = new FileReader();
+       var file = files[0];
+
+       reader.onload = function(e) {
+           // get file content
+           rawdata = new Uint8Array(e.target.result);
+           alert("Raw data read.  size: " + rawdata.length);
+  
+       } // reader.onload
+
+       reader.onerror = function(e) {
+          // error occurred
+	  console.log('Error : ' + e.type);
+        };
+
+        reader.readAsArrayBuffer(file);
+
+   } // readAllSongsFile
+
+   readAllSongsFile();
+
+} // ReadFileData
+
+
+
+function SaveToFile() {
+//****************************************************************
+//   Activates the actual download link
+//   SAVE to a LOCAL file
+//****************************************************************
+   var len;
+   var fname;
+
+   //----- EDIT the data in "rawdata" as needed
+   len = rawdata.lengh;
+   //  rawdata[i] = newdata ??
+
+   //----- SAVE the altered data 
+   var link = document.getElementById('downloadlink');
+
+   var blob = new Blob([rawdata], {type: "application/octet-stream"}),
+              url = window.URL.createObjectURL(blob);
+   link.href = url;
+
+   fname = document.getElementById("fname").value;
+   link.download = fname;
+
+  //   trigger the download (save) link
+  link.click();
+
+  alert("File saved as: " + fname);
+
+} // SaveToFile
+
+
+</SCRIPT>
+
+</body> </html>
+
+
+
